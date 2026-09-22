@@ -15,9 +15,9 @@
     --panel-hover: #19243e;
     --line: #263452;
     --line-strong: #38466a;
-    --salmon: #ef8a68;
+    --salmon: #ef8a68;   /* private */
+    --blue: #7fb0d8;     /* public  */
     --salmon-soft: #f0a889;
-    --blue: #7fb0d8;
     --text: #edeff4;
     --text-dim: #808ba5;
     box-sizing: border-box;
@@ -108,6 +108,7 @@
   }
 
   a.card {
+    --accent: var(--blue);
     display: flex;
     align-items: center;
     gap: 1.1rem;
@@ -121,34 +122,63 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: rise 0.5s ease forwards;
-    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+    opacity: 1;
+    animation: rise 0.5s ease backwards;
+    transition:
+      border-color 0.18s ease,
+      background 0.18s ease,
+      transform 0.18s ease,
+      opacity 0.24s ease,
+      box-shadow 0.24s ease;
   }
   a.card:nth-child(1) { animation-delay: 0.05s; }
   a.card:nth-child(2) { animation-delay: 0.14s; }
   a.card:nth-child(3) { animation-delay: 0.23s; }
   a.card:nth-child(4) { animation-delay: 0.32s; }
 
+  /* accent wash */
   a.card::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(220px 120px at 0% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 70%);
+    background: radial-gradient(220px 120px at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
     opacity: 0;
-    transition: opacity 0.18s ease;
+    transition: opacity 0.22s ease;
     z-index: -1;
   }
+  /* left accent rail */
+  a.card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+
   a.card:hover {
     border-color: var(--accent);
     transform: translateY(-2px);
+    box-shadow: 0 12px 34px -16px color-mix(in srgb, var(--accent) 70%, transparent);
   }
-  a.card:hover::after { opacity: 1; }
+  a.card:hover::after,
+  a.card:hover::before { opacity: 1; }
+
   a.card:focus-visible {
     outline: 2px solid var(--blue);
     outline-offset: 3px;
   }
+
+  /* ---- the fade: dim the others, light up the one you're on ---- */
+  @media (hover: hover) {
+    .grid:hover a.card { opacity: 0.35; }
+    .grid:hover a.card:hover { opacity: 1; }
+  }
+  .grid:focus-within a.card { opacity: 0.35; }
+  .grid a.card:focus-visible { opacity: 1; }
 
   .icon {
     flex: none;
@@ -164,6 +194,11 @@
     background: color-mix(in srgb, var(--accent) 20%, transparent);
     color: var(--accent);
     border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: background 0.22s ease, border-color 0.22s ease;
+  }
+  a.card:hover .icon {
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
   }
 
   .body { min-width: 0; }
@@ -178,6 +213,32 @@
     font-size: 0.85rem;
     color: var(--text-dim);
     line-height: 1.4;
+  }
+
+  /* privacy badge — fades in on hover */
+  .badge {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 0.16rem 0.48rem;
+    border-radius: 999px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  a.card:hover .badge,
+  a.card:focus-visible .badge {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .arrow {
@@ -202,29 +263,26 @@
     padding-top: 1.2rem;
   }
 
+  /* animate FROM the hidden state, no fill-forwards —
+     so hover styles stay in charge afterwards */
   @keyframes rise {
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; translate: 0 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    a.card { animation: none; opacity: 1; transform: none; }
-    a.card, .arrow { transition: none; }
+    a.card { animation: none; }
+    a.card, .arrow, .badge, .icon { transition: none; }
+    .grid:hover a.card { opacity: 1; }
   }
 </style>
 </head>
 <body>
 <main>
 
-  <p class="status"><span class="led"></span> 3 projects online</p>
   <h1>home<span class="slash">/</span>neks</h1>
-
-
-  <div class="section-head">
-    <h2>Projects</h2>
-    <span class="count">03</span>
-  </div>
 
   <div class="grid">
     <a class="card" style="--accent:#ef8a68" href="https://neks-hector.walrus-armadillo.ts.net/" target="_blank" rel="noopener">
+      <span class="badge">private</span>
       <div class="icon">H</div>
       <div class="body">
         <p class="title">H.E.C.T.O.R</p>
@@ -234,6 +292,7 @@
     </a>
 
     <a class="card" style="--accent:#7fb0d8" href="https://neks-git.github.io/Neks-L4-s/" target="_blank" rel="noopener">
+      <span class="badge">public</span>
       <div class="icon">L4</div>
       <div class="body">
         <p class="title">L4 Mission Guide</p>
@@ -242,7 +301,8 @@
       <span class="arrow">→</span>
     </a>
 
-    <a class="card" style="--accent:#ef8a68" href="https://github.com/Neks-Git" target="_blank" rel="noopener">
+    <a class="card" style="--accent:#7fb0d8" href="https://github.com/Neks-Git" target="_blank" rel="noopener">
+      <span class="badge">public</span>
       <div class="icon">{ }</div>
       <div class="body">
         <p class="title">GitHub</p>

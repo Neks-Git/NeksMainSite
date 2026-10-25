@@ -4,319 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Neks</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="Neks. Finland. Things I run and things I make.">
+<meta property="og:title" content="Neks">
+<meta property="og:description" content="Finland. Things I run and things I make.">
+<link rel="icon" href="avatar.png">
 <style>
   :root {
-    --bg: #0c1220;
-    --bg-2: #0f1626;
-    --panel: #141d33;
-    --panel-hover: #19243e;
-    --line: #263452;
-    --line-strong: #38466a;
-    --salmon: #ef8a68;   /* private */
-    --blue: #7fb0d8;     /* public  */
-    --salmon-soft: #f0a889;
-    --text: #edeff4;
-    --text-dim: #808ba5;
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #14130f;
+    --fg: #cfcab9;
+    --dim: #7a7567;
+    --accent: #a9cf8e;   /* sage, pulled from the avatar */
+    --danger: #c96b5a;   /* muted red for private */
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
   }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   * { box-sizing: border-box; }
-  html, body { height: 100%; margin: 0; }
-
   body {
-    background:
-      radial-gradient(1100px 520px at 12% -12%, rgba(239,138,104,0.16), transparent 60%),
-      radial-gradient(900px 500px at 100% 8%, rgba(127,176,216,0.10), transparent 60%),
-      var(--bg);
-    color: var(--text);
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    min-height: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 5.5rem 1.5rem 4rem;
-  }
-
-  main { width: 100%; max-width: 900px; }
-
-  /* --- heroo --- */
-  .status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    letter-spacing: 0.02em;
-    margin-bottom: 1.6rem;
-  }
-  .status .led {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--salmon);
-    box-shadow: 0 0 0 3px rgba(239,138,104,0.18);
-  }
-
-  h1 {
-    font-size: clamp(2.6rem, 7vw, 3.8rem);
-    font-weight: 700;
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    margin: 0 0 1rem;
-  }
-  h1 .slash { color: var(--salmon); }
-
-  .lede {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 1.05rem;
-    color: var(--text-dim);
-    max-width: 46ch;
-    line-height: 1.6;
-    margin: 0 0 3.5rem;
-  }
-
-  /* --- grid --- */
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 0.85rem;
-    margin-bottom: 1.1rem;
-  }
-  .section-head h2 {
-    font-size: 0.95rem;
-    font-weight: 600;
     margin: 0;
-    color: var(--text);
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 16px;
+    line-height: 1.7;
+    padding: max(2rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) 3rem max(1.25rem, env(safe-area-inset-left));
+    min-height: 100dvh;
   }
-  .section-head .count {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--text-dim);
-  }
+  main { max-width: 52rem; margin: 0 auto; }
+  .p { color: var(--accent); }
+  .d { color: var(--dim); }
+  pre { margin: 0 0 1.5rem; font: inherit; white-space: pre-wrap; }
 
-  .grid {
+  .about {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin: 0 0 2rem;
+  }
+  .about img {
+    flex: none;
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border: 1px solid var(--dim);
+    background: #1f2a1b;
+    display: block;
+  }
+  .about pre { margin: 0; }
+
+  .row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-  }
-
-  a.card {
-    --accent: var(--blue);
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
+    grid-template-columns: 11ch 6ch 11ch 1fr;
+    gap: 0 1.5ch;
+    padding: 0.15rem 0.5rem;
+    margin: 0 -0.5rem;
+    color: inherit;
     text-decoration: none;
-    color: var(--text);
-    background: linear-gradient(180deg, var(--panel), var(--bg-2));
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 1.35rem 1.4rem;
-    min-height: 96px;
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    opacity: 1;
-    animation: rise 0.5s ease backwards;
-    transition:
-      border-color 0.18s ease,
-      background 0.18s ease,
-      transform 0.18s ease,
-      opacity 0.24s ease,
-      box-shadow 0.24s ease;
   }
-  a.card:nth-child(1) { animation-delay: 0.05s; }
-  a.card:nth-child(2) { animation-delay: 0.14s; }
-  a.card:nth-child(3) { animation-delay: 0.23s; }
-  a.card:nth-child(4) { animation-delay: 0.32s; }
+  .row .perm, .row .size, .row .date { color: var(--dim); }
+  .row .nm { color: var(--fg); }
 
-  /* accent wash */
-  a.card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(220px 120px at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.22s ease;
-    z-index: -1;
-  }
-  /* left accent rail */
-  a.card::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--accent);
-    opacity: 0;
-    transition: opacity 0.22s ease;
-  }
+  /* public hover: sage */
+  .row:hover, .row:focus-visible { background: var(--accent); color: var(--bg); outline: none; }
+  .row:hover .perm, .row:hover .size, .row:hover .date, .row:hover .nm,
+  .row:focus-visible .perm, .row:focus-visible .size, .row:focus-visible .date, .row:focus-visible .nm { color: var(--bg); }
 
-  a.card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 34px -16px color-mix(in srgb, var(--accent) 70%, transparent);
-  }
-  a.card:hover::after,
-  a.card:hover::before { opacity: 1; }
+  /* private hover: red */
+  .row.private:hover, .row.private:focus-visible { background: var(--danger); color: var(--bg); }
+  .row.private:hover .perm, .row.private:hover .size, .row.private:hover .date, .row.private:hover .nm,
+  .row.private:focus-visible .perm, .row.private:focus-visible .size, .row.private:focus-visible .date, .row.private:focus-visible .nm { color: var(--bg); }
 
-  a.card:focus-visible {
-    outline: 2px solid var(--blue);
-    outline-offset: 3px;
+  .note {
+    margin: 0.4rem 0 0 0;
+    text-indent: -2ch;
+    padding-left: 2ch;
   }
-
-  /* ---- the fade: dim the others, light up the one you're on ---- */
-  @media (hover: hover) {
-    .grid:hover a.card { opacity: 0.35; }
-    .grid:hover a.card:hover { opacity: 1; }
+  .cursor {
+    display: inline-block; width: 0.6em; height: 1.1em; background: var(--accent);
+    vertical-align: text-bottom; animation: blink 1.1s steps(1) infinite;
   }
-  .grid:focus-within a.card { opacity: 0.35; }
-  .grid a.card:focus-visible { opacity: 1; }
-
-  .icon {
-    flex: none;
-    width: 42px;
-    height: 42px;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
-    font-weight: 500;
-    background: color-mix(in srgb, var(--accent) 20%, transparent);
-    color: var(--accent);
-    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
-    transition: background 0.22s ease, border-color 0.22s ease;
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (max-width: 40rem) {
+    .row { grid-template-columns: 1fr; padding: 0.5rem; }
+    .row .size { display: none; }
+    .row .perm { font-size: 0.8em; }
+    .about img { width: 72px; height: 72px; }
   }
-  a.card:hover .icon {
-    background: color-mix(in srgb, var(--accent) 28%, transparent);
-    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-  }
-
-  .body { min-width: 0; }
-  .title {
-    font-weight: 600;
-    font-size: 1.08rem;
-    margin: 0 0 0.28rem;
-  }
-  .desc {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    line-height: 1.4;
-  }
-
-  /* privacy badge — fades in on hover */
-  .badge {
-    position: absolute;
-    top: 0.7rem;
-    right: 0.85rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    padding: 0.16rem 0.48rem;
-    border-radius: 999px;
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
-    opacity: 0;
-    transform: translateY(-4px);
-    transition: opacity 0.22s ease, transform 0.22s ease;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  a.card:hover .badge,
-  a.card:focus-visible .badge {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .arrow {
-    margin-left: auto;
-    flex: none;
-    color: var(--text-dim);
-    transition: transform 0.18s ease, color 0.18s ease;
-  }
-  a.card:hover .arrow {
-    color: var(--accent);
-    transform: translateX(3px);
-  }
-
-  footer {
-    margin-top: 3.5rem;
-    display: flex;
-    justify-content: space-between;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    border-top: 1px solid var(--line);
-    padding-top: 1.2rem;
-  }
-
-  /* animate FROM the hidden state, no fill-forwards —
-     so hover styles stay in charge afterwards */
-  @keyframes rise {
-    from { opacity: 0; translate: 0 12px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    a.card { animation: none; }
-    a.card, .arrow, .badge, .icon { transition: none; }
-    .grid:hover a.card { opacity: 1; }
-  }
+  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
 </style>
 </head>
 <body>
 <main>
+  <pre><span class="p">neks@home</span><span class="d">:</span>~<span class="d">$</span> cat about.txt</pre>
 
-  <h1>home<span class="slash">/</span>neks</h1>
+  <div class="about">
+    <img src="avatar.png" alt="Neks" width="96" height="96" onerror="this.style.display='none'">
+    <pre>Neks. Finland.
+Things I run and things I make.</pre>
+  </div>
 
-  <div class="grid">
-    <a class="card" style="--accent:#ef8a68" href="https://neks-hector.walrus-armadillo.ts.net/" target="_blank" rel="noopener">
-      <span class="badge">private</span>
-      <div class="icon">H</div>
-      <div class="body">
-        <p class="title">H.E.C.T.O.R</p>
-        <p class="desc">Personal AI workspace — chat, server management, monitoring</p>
-      </div>
-      <span class="arrow">→</span>
+  <pre><span class="p">neks@home</span><span class="d">:</span>~<span class="d">$</span> ls -l</pre>
+
+  <div>
+    <a class="row private" href="https://neks-hector.walrus-armadillo.ts.net/" target="_blank" rel="noopener">
+      <span class="perm">drwx------</span><span class="size">neks</span><span class="date">private</span><span class="nm">hector/</span>
     </a>
-
-    <a class="card" style="--accent:#7fb0d8" href="https://neks-git.github.io/Neks-L4-s/" target="_blank" rel="noopener">
-      <span class="badge">public</span>
-      <div class="icon">L4</div>
-      <div class="body">
-        <p class="title">L4 Mission Guide</p>
-        <p class="desc">EVE Online mission tactics, tank notes, loot and ammo</p>
-      </div>
-      <span class="arrow">→</span>
+    <a class="row" href="https://neks-git.github.io/Neks-L4-s/" target="_blank" rel="noopener">
+      <span class="perm">drwxr-xr-x</span><span class="size">neks</span><span class="date">public</span><span class="nm">l4-mission-guide/</span>
     </a>
-
-    <a class="card" style="--accent:#7fb0d8" href="https://github.com/Neks-Git" target="_blank" rel="noopener">
-      <span class="badge">public</span>
-      <div class="icon">{ }</div>
-      <div class="body">
-        <p class="title">GitHub</p>
-        <p class="desc">Source code and other projects</p>
-      </div>
-      <span class="arrow">→</span>
+    <a class="row" href="https://github.com/Neks-Git" target="_blank" rel="noopener">
+      <span class="perm">drwxr-xr-x</span><span class="size">neks</span><span class="date">public</span><span class="nm">github/</span>
     </a>
   </div>
 
-  <footer>
-    <span>&copy; 2026 Neks</span>
-    <span>Finland</span>
-  </footer>
+  <pre class="note d"># hector: personal AI workspace, chat, server management, monitoring
+# l4-mission-guide: EVE Online mission tactics, tank notes, loot and ammo
+# github: source code and other projects</pre>
 
+  <pre><span class="p">neks@home</span><span class="d">:</span>~<span class="d">$</span> cat socials.txt</pre>
+
+  <div>
+    <a class="row" href="https://www.youtube.com/@Neks." target="_blank" rel="noopener">
+      <span class="perm">drwxr-xr-x</span><span class="size">neks</span><span class="date">youtube</span><span class="nm">youtube/</span>
+    </a>
+    <a class="row" href="https://steamcommunity.com/id/NeKsssss/" target="_blank" rel="noopener">
+      <span class="perm">drwxr-xr-x</span><span class="size">neks</span><span class="date">steam</span><span class="nm">steam/</span>
+    </a>
+  </div>
+
+  <pre class="note d"># youtube: @Neks.
+# discord: neks2
+# steam: NeKsssss</pre>
+
+  <pre><span class="p">neks@home</span><span class="d">:</span>~<span class="d">$</span> <span class="cursor"></span></pre>
 </main>
 </body>
 </html>
